@@ -1,59 +1,241 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# CostFlow
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+サブスクリプションと固定費を管理し、収入に対する支出の割合を可視化するアプリケーション
 
-## About Laravel
+## 概要
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+CostFlowは、月々のサブスクリプションや固定費を一元管理し、収入に対する支出の割合を把握できるWebアプリケーションです。
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 技術スタック
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### バックエンド
+- **Laravel**: 12.41.1
+- **PHP**: 8.5
+- **PostgreSQL**: 17
+- **Redis**: Alpine (キャッシュ)
 
-## Learning Laravel
+### フロントエンド
+- **Vite**: 7.2.6
+- **Laravel Vite Plugin**: 2.0.1
+- **Tailwind CSS**: 3.x
+- **Alpine.js**: 3.x (Laravel Breezeに含まれる)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### 開発環境
+- **Docker**: Laravel Sail
+- **Meilisearch**: 検索エンジン
+- **Mailpit**: メール確認 (開発用)
+- **Selenium**: E2Eテスト用
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 主要パッケージ
+- **Laravel Breeze**: 認証機能
+- **Blade UI Kit**: アイコン管理
+  - blade-icons
+  - blade-heroicons
 
-## Laravel Sponsors
+## 開発環境構成
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Docker Services
 
-### Premium Partners
+| サービス | イメージ | ポート | 用途 |
+|---------|---------|--------|------|
+| laravel.test | sail-8.5/app | 80, 5173 | Laravelアプリケーション |
+| pgsql | postgres:17 | 5432 | データベース |
+| redis | redis:alpine | 6379 | キャッシュ |
+| meilisearch | getmeili/meilisearch | 7700 | 検索エンジン |
+| mailpit | axllent/mailpit | 1025, 8025 | メール確認 |
+| selenium | selenium/standalone-chromium | - | E2Eテスト |
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## セットアップ
 
-## Contributing
+### 必要なもの
+- Docker Desktop
+- Git
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### インストール手順
 
-## Code of Conduct
+1. **リポジトリをクローン**
+```bash
+git clone <repository-url>
+cd costflow
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+2. **環境変数をコピー**
+```bash
+cp .env.example .env
+```
 
-## Security Vulnerabilities
+3. **Dockerコンテナを起動**
+```bash
+./vendor/bin/sail up -d
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+4. **依存関係をインストール**
+```bash
+./vendor/bin/sail composer install
+./vendor/bin/sail npm install
+```
 
-## License
+5. **アプリケーションキーを生成**
+```bash
+./vendor/bin/sail artisan key:generate
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+6. **データベースマイグレーション**
+```bash
+./vendor/bin/sail artisan migrate
+```
+
+7. **フロントエンド開発サーバーを起動**
+```bash
+./vendor/bin/sail npm run dev
+```
+
+## 使用方法
+
+### アプリケーションにアクセス
+- **アプリケーション**: http://localhost
+- **Vite開発サーバー**: http://localhost:5173
+- **Mailpit (メール確認)**: http://localhost:8025
+- **Meilisearch**: http://localhost:7700
+
+### よく使うコマンド
+
+```bash
+# コンテナ起動
+sail up -d
+
+# コンテナ停止
+sail down
+
+# Artisanコマンド
+sail artisan <command>
+
+# Composer
+sail composer <command>
+
+# NPM
+sail npm <command>
+
+# データベースリセット
+sail artisan migrate:fresh --seed
+
+# テスト実行
+sail artisan test
+
+# キャッシュクリア
+sail artisan cache:clear
+sail artisan config:clear
+sail artisan view:clear
+```
+
+### Sailエイリアス設定(オプション)
+
+毎回 `./vendor/bin/sail` と入力するのが面倒な場合:
+
+```bash
+alias sail='./vendor/bin/sail'
+```
+
+`.zshrc` または `.bashrc` に追加すると永続化されます。
+
+## データベース構成
+
+### PostgreSQL設定
+- **Port**: 5432
+- **Database**: costflow (デフォルト)
+- **Username**: sail (デフォルト)
+- **Password**: password (デフォルト)
+
+### 主要テーブル
+- **users**: ユーザー情報
+- **subscriptions**: サブスクリプション管理
+- **fixed_costs**: 固定費管理
+
+## プロジェクト構造
+
+```
+costflow/
+├── app/                    # アプリケーションコード
+├── database/               # マイグレーション、シーダー
+├── resources/
+│   ├── css/               # Tailwind CSS
+│   ├── js/                # JavaScript
+│   └── views/             # Bladeテンプレート
+│       ├── components/    # 再利用可能なコンポーネント
+│       └── layouts/       # レイアウトファイル
+├── routes/                # ルート定義
+├── docker-compose.yml     # Docker構成
+└── vite.config.js        # Vite設定
+```
+
+## UI/UX
+
+### レイアウト
+- サイドバーナビゲーション (縦並び)
+- レスポンシブデザイン対応
+
+### カラースキーム
+- Primary: Indigo
+- Background: Gray-50
+- Accent: Gray-100
+
+## トラブルシューティング
+
+### ポートが使用中の場合
+
+`.env` ファイルで以下を変更:
+```env
+APP_PORT=8000
+FORWARD_DB_PORT=54320
+```
+
+### コンテナが起動しない場合
+
+```bash
+sail down
+docker system prune -a
+sail up -d
+```
+
+### Viteが起動しない場合
+
+```bash
+sail npm install
+rm -rf node_modules package-lock.json
+sail npm install
+sail npm run dev
+```
+
+## 開発ガイドライン
+
+### コミットメッセージ
+- 日本語で記述
+- 変更内容を明確に
+
+例:
+```
+サブスクリプション管理機能を追加
+パッケージ追加: blade-iconsをインストール
+サイドバーレイアウトに変更
+```
+
+### コーディング規約
+- Laravel標準に準拠
+- Tailwind CSSのユーティリティクラスを使用
+- コンポーネントの再利用を優先
+
+## ライセンス
+
+MIT
+
+## 作成者
+
+ソウマ
+
+## バージョン履歴
+
+- **v0.1.0** (2025-12-09)
+  - 初期セットアップ
+  - Laravel 12.41.1
+  - サイドバーナビゲーション実装
+  - 認証機能 (Laravel Breeze)
