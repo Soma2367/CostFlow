@@ -12,6 +12,12 @@
         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="block">
             {{ __('Dashboard') }}
         </x-nav-link>
+        <x-nav-link :href="route('subscriptions.index')" :active="request()->routeIs('subscriptions.index')" class="block">
+            サブスク管理
+        </x-nav-link>
+        <x-nav-link :href="route('fixed-costs.index')" :active="request()->routeIs('fixed-costs.index')" class="block">
+            固定費管理
+        </x-nav-link>
     </div>
 
     <!-- Settings Dropdown Section -->

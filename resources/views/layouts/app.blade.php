@@ -20,9 +20,7 @@
 
             <!-- Main Content -->
             <main class="flex-1 overflow-y-auto">
-                <div class="p-8">
                     {{ $slot }}
-                </div>
             </main>
         </div>
     </body>
