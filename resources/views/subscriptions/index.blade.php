@@ -15,20 +15,20 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div class="bg-white rounded-lg shadow p-6">
                     <p class="text-sm text-gray-600 mb-2">登録数</p>
-                    <p class="text-4xl font-bold text-gray-800">5</p>
+                    <p class="text-4xl font-bold text-gray-800">{{ $countSubscriptions }}</p>
                     <p class="text-sm text-gray-500 mt-1">サービス</p>
                 </div>
 
                 <div class="bg-blue-500 rounded-lg shadow p-6 text-white">
                     <p class="text-sm mb-2">月額合計</p>
-                    <p class="text-4xl font-bold">¥8,500</p>
+                    <p class="text-4xl font-bold">¥{{ number_format($sum) }}</p>
                     <p class="text-sm mt-1">/月</p>
                 </div>
 
 
                 <div class="bg-white rounded-lg shadow p-6">
                     <p class="text-sm text-gray-600 mb-2">アクティブ</p>
-                    <p class="text-4xl font-bold text-green-500">3</p>
+                    <p class="text-4xl font-bold text-green-500">{{ $countActiveSubscriptions }}</p>
                     <p class="text-sm text-gray-500 mt-1">有効サービス</p>
                 </div>
             </div>
@@ -36,37 +36,30 @@
 
             <div class="mb-6">
                 <h2 class="text-xl font-bold text-gray-800 mb-4">TOP3 高額サブスク</h2>
+
+                @if($rankSubscByAmount->count() > 0)
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <!-- 1位 -->
-                    <div class="bg-white rounded-lg shadow p-5 border-l-4 border-yellow-400">
+                  @foreach($rankSubscByAmount as $index => $subscription)
+                   @php
+                    $rankStyle = App\Enums\RankStyle::fromIndex($index);
+                   @endphp
+                    <div class="bg-white rounded-lg shadow p-5 border-l-4 {{ $rankStyle->borderColor() }}">
                         <div class="flex items-center justify-between mb-3">
-                            <span class="text-2xl font-bold text-yellow-500">1位</span>
-                            <span class="text-2xl font-bold text-gray-800">¥2,500</span>
+                            <span class="text-2xl font-bold {{ $rankStyle->textClass() }}">1位</span>
+                            <span class="text-2xl font-bold text-gray-800">{{ $subscription->subscription_name }}</span>
                         </div>
-                        <p class="font-bold text-gray-800">Adobe Creative Cloud</p>
-                        <p class="text-sm text-gray-500">仕事 • 毎月1日</p>
+                        <p class="font-bold text-gray-800">{{ $subscription->amount }}</p>
+                        <p class="text-sm text-gray-500">
+                            {{ $subscription->category }} • 毎月{{ $subscription->billing_day }}日
+                        </p>
                     </div>
-
-
-                    <div class="bg-white rounded-lg shadow p-5 border-l-4 border-gray-400">
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-2xl font-bold text-gray-500">2位</span>
-                            <span class="text-2xl font-bold text-gray-800">¥1,980</span>
-                        </div>
-                        <p class="font-bold text-gray-800">Netflix</p>
-                        <p class="text-sm text-gray-500">エンタメ • 毎月15日</p>
-                    </div>
-
-
-                    <div class="bg-white rounded-lg shadow p-5 border-l-4 border-orange-400">
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="text-2xl font-bold text-orange-500">3位</span>
-                            <span class="text-2xl font-bold text-gray-800">¥1,200</span>
-                        </div>
-                        <p class="font-bold text-gray-800">Udemy</p>
-                        <p class="text-sm text-gray-500">学習 • 毎月20日</p>
-                    </div>
+                  @endforeach
                 </div>
+                @else
+                   <div class="text-center py-8 text-gray-500">
+                      登録されているサブスクはありません。
+                   </div>
+                @endif
             </div>
 
             <div class="bg-white rounded-lg shadow">
@@ -110,13 +103,19 @@
                                 </span>
 
                                 <div class="flex gap-2">
-                                    <a href=""
+                                    <a href="{{ route('subscriptions.show', $subscription) }}"
+                                    class="px-4 py-2 bg-gray-500 text-white text-sm rounded hover:bg-gray-600">
+                                        詳細
+                                    </a>
+                                    <a href="{{ route('subscriptions.edit', $subscription) }}"
                                     class="px-4 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600">
                                         編集
                                     </a>
-                                    <form action=""
-                                        method="">
+                                    <form action="{{ route('subscriptions.destroy', $subscription) }}"
+                                        method="POST"
+                                        onsubmit="return confirm('本当に削除しますか？');">
                                         @csrf
+                                        @method('DELETE')
                                         <button type="submit"
                                                 class="px-4 py-2 bg-red-500 text-white text-sm rounded hover:bg-red-600">
                                             削除
