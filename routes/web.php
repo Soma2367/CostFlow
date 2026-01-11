@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\FixedCostController;
@@ -14,6 +16,9 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/admin', [AdminController::class, 'index'])->name('admins.index');
+
+    Route::resource('incomes', IncomeController::class)->only(['store', 'update', 'destroy']);
     Route::resource('subscriptions', SubscriptionController::class);
     Route::resource('fixed-costs', FixedCostController::class);
 });
