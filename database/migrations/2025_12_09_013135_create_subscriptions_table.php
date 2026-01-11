@@ -19,7 +19,7 @@ return new class extends Migration
             $table->decimal('amount', 10, 2);
             $table->integer('billing_day');
             $table->string('status', 20)->default('active');
-             $table->text('notes')->nullable();
+            $table->text('memo')->nullable();
             $table->timestamps();
 
             $table->index(['user_id', 'status']);
