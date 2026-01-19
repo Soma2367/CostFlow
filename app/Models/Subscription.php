@@ -14,7 +14,7 @@ class Subscription extends Model
         'amount',
         'billing_day',
         'status',
-        'notes',
+        'memo',
     ];
 
     protected $casts = [

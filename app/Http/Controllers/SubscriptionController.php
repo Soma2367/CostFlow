@@ -21,8 +21,18 @@ class SubscriptionController extends Controller
     public function index()
     {
         $subscriptions = $this->subscriptionService->getSubscDataOrderByBillingDate(Auth::id());
+        $countSubscriptions = $this->subscriptionService->countSubscriptions(Auth::id());
+        $countActiveSubscriptions = $this->subscriptionService->countActiveSubscriptions(Auth::id());
+        $rankSubscByAmount = $this->subscriptionService->rankSubscByAmount(Auth::id());
+        $sum = $this->subscriptionService->sumOfSubscAmount(Auth::id());
 
-        return view('subscriptions.index', compact('subscriptions'));
+        return view('subscriptions.index', compact(
+            'subscriptions',
+            'countSubscriptions',
+            'countActiveSubscriptions',
+            'rankSubscByAmount',
+            'sum'
+        ));
     }
 
     /**
@@ -30,7 +40,7 @@ class SubscriptionController extends Controller
      */
     public function create()
     {
-        $statuese = SubscriptionStatus::cases();  // statuese のまま
+        $statuese = SubscriptionStatus::cases();
         return view('subscriptions.create', compact('statuese'));
     }
 
@@ -53,7 +63,9 @@ class SubscriptionController extends Controller
             'user_id' => Auth::id(),
         ]);
 
-        return redirect()->route('subscriptions.index')->with('success', 'サブスクリプションを登録しました。');
+        return redirect()
+            ->route('subscriptions.index')
+            ->with('success', 'サブスクリプションを登録しました。');
     }
 
     /**
@@ -61,7 +73,11 @@ class SubscriptionController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $subscription = Subscription::where('id', $id)
+        ->where('user_id', Auth::id())
+        ->firstOrFail();
+
+        return view('subscriptions.show', compact('subscription'));
     }
 
     /**
@@ -69,15 +85,37 @@ class SubscriptionController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $subscription = Subscription::where('id', $id)
+                ->where('user_id', Auth::id())
+                ->firstOrFail();
+
+        $statuese = SubscriptionStatus::cases();
+
+        return view('subscriptions.edit', compact(
+            'subscription',
+            'statuese'
+        ));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Subscription $subscription)
     {
-        //
+        $validated = $request->validate([
+            'subscription_name' => 'required|string|max:255',
+            'category' => 'nullable|string|max:100',
+            'amount' => 'required|numeric|min:0',
+            'billing_day' => 'required|integer|min:1|max:31',
+            'status' => 'required|in:active,paused,stopped',
+            'memo' => 'nullable|string',
+        ]);
+
+        $subscription->update($validated);
+
+        return redirect()
+            ->route('subscriptions.index')
+            ->with('success', 'サブスクリプションを更新しました。');
     }
 
     /**
@@ -85,6 +123,14 @@ class SubscriptionController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $subscription = Subscription::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        $subscription->delete();
+
+        return redirect()
+            ->route('subscriptions.index')
+            ->with('success', 'サブスクリプションを削除しました。');
     }
 }

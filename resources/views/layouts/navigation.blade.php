@@ -9,7 +9,7 @@
 
     <!-- Navigation Links Section -->
     <div class="flex-1 p-4 space-y-2 flex flex-col items-center">
-        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="block">
+        <x-nav-link :href="route('admins.index')" :active="request()->routeIs('admins.index')" class="block">
             {{ __('Dashboard') }}
         </x-nav-link>
         <x-nav-link :href="route('subscriptions.index')" :active="request()->routeIs('subscriptions.index')" class="block">
