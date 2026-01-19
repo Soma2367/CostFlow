@@ -15,11 +15,19 @@ enum FixedCostStatus: string
         };
     }
 
+     public function statusColor(): string
+    {
+        return match($this) {
+            self::ACTIVE => 'bg-green-100 text-green-700',
+            self::INACTIVE => 'bg-gray-100 text-gray-600',
+        };
+    }
+
     public static function options(): array
     {
         return array_map(fn($case) => [
             'value' => $case->value,
-            'lable' => $case->label()
+            'label' => $case->label()
         ], self::cases());
     }
 }
