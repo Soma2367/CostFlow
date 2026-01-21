@@ -32,6 +32,21 @@
                 </div>
             </div>
 
+            <div class="m-8">
+                <h2>収入に対する固定費割合</h2>
+
+                @if($chartData)
+                  <div
+                  id="fixedCostChart"
+                  data-series='@json($chartData["series"])'
+                  data-labels='@json($chartData["labels"])'
+                >
+                </div>
+                @else
+                  <p>データがありません</p>
+                @endif
+            </div>
+
             <div class="mb-6">
                 <h2 class="text-xl font-bold text-gray-800 mb-4">TOP3 高額固定費</h2>
 
@@ -43,7 +58,7 @@
                    @endphp
                     <div class="bg-white rounded-lg shadow p-5 border-l-4 {{ $rankStyle->borderColor() }}">
                         <div class="flex items-center justify-between mb-3">
-                            <span class="text-2xl font-bold {{ $rankStyle->textClass() }}">1位</span>
+                            <span class="text-2xl font-bold {{ $rankStyle->textClass() }}">{{ $index + 1 }}位</span>
                             <span class="text-2xl font-bold text-gray-800">{{ $fixedCost->cost_name }}</span>
                         </div>
                         <p class="font-bold text-gray-800">{{ $fixedCost->amount }}</p>

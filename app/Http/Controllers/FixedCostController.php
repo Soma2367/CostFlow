@@ -25,12 +25,15 @@ class FixedCostController extends Controller
         $rankFixedCostByAmount = $this->fixedCostService->rankFixedCostByAmount(Auth::id());
         $sum = $this->fixedCostService->sumOfFixedAmount(Auth::id());
 
+        $chartData = $this->fixedCostService->allItemOfFixedCostAndIncome(Auth::id());
+
         return view('fixed-costs.index', compact(
             'fixedCosts',
             'countFixedCosts',
             'countActiveFixedCosts',
             'rankFixedCostByAmount',
-            'sum'
+            'sum',
+            'chartData'
         ));
     }
 

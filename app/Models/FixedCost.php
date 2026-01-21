@@ -14,7 +14,7 @@ class FixedCost extends Model
         'amount',
         'billing_day',
         'status',
-        'notes',
+        'memo',
     ];
 
     public $casts = [
