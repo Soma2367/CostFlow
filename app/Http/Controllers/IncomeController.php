@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Income;
+use Illuminate\Support\Facades\Auth;
 
 class IncomeController extends Controller
 {
@@ -27,7 +29,18 @@ class IncomeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'amount' => 'required|numeric|min:0',
+        ]);
+
+        Income::create([
+            'amount' => $validated['amount'],
+            'user_id' => Auth::id(),
+        ]);
+
+        return redirect()
+            ->route('admins.index')
+            ->with('success', '収入を登録しました。');
     }
 
     /**
