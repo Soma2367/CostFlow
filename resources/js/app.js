@@ -2,11 +2,18 @@ import './bootstrap';
 
 import Alpine from 'alpinejs';
 import { fixedCostChart } from './charts/fixedCostExpenseChart';
+import { subScriptionChart } from './charts/subscriptionChart';
 
 window.Alpine = Alpine;
 
 Alpine.start();
 
 document.addEventListener('DOMContentLoaded', () => {
-    fixedCostChart();
+    if(document.getElementById('fixedCostChart')) {
+        fixedCostChart();
+    }
+
+    if(document.getElementById('subScriptionChart')) {
+        subScriptionChart();
+    }
 });
