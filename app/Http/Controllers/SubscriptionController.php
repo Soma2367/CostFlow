@@ -25,13 +25,15 @@ class SubscriptionController extends Controller
         $countActiveSubscriptions = $this->subscriptionService->countActiveSubscriptions(Auth::id());
         $rankSubscByAmount = $this->subscriptionService->rankSubscByAmount(Auth::id());
         $sum = $this->subscriptionService->sumOfSubscAmount(Auth::id());
+        $chartData = $this->subscriptionService->allItemOfSubscAndIncome(Auth::id());
 
         return view('subscriptions.index', compact(
             'subscriptions',
             'countSubscriptions',
             'countActiveSubscriptions',
             'rankSubscByAmount',
-            'sum'
+            'sum',
+            'chartData'
         ));
     }
 

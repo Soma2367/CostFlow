@@ -33,6 +33,20 @@
                 </div>
             </div>
 
+            <div class="m-8 flex justify-center">
+                @if($chartData)
+                <div>収入に対するサブスクの割合</div>
+                <div
+                  id="subScriptionChart"
+                  data-series='@json($chartData["series"])'
+                  data-labels='@json($chartData["labels"])'
+                >
+                </div>
+                @else
+                  <p>データがありません</p>
+                @endif
+            </div>
+
 
             <div class="mb-6">
                 <h2 class="text-xl font-bold text-gray-800 mb-4">TOP3 高額サブスク</h2>
