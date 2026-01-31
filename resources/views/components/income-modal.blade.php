@@ -1,14 +1,20 @@
-@props(['action' => route('incomes.store')])
+@props(['income' => null])
+
+@php
+  $isEdit = $income !== null;
+  $action = $isEdit ? route('income.update', ['income' => $income->id]) : route('income.store');
+@endphp
 
 <div x-data="{ open: false }" class="relative">
     <button
         @click="open = true"
-        class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md transition flex items-center gap-2"
+        class="px-4 py-2 bg-blue-600 hover:bg-blue-800 text-white rounded-md transition flex items-center gap-2"
     >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-        </svg>
-        収入登録
+        @if($isEdit)
+            <x-heroicon-o-pencil class="w-4 h-4" />
+        @else
+            <x-heroicon-o-plus class="w-4 h-4" />
+        @endif
     </button>
 
     <div
@@ -43,6 +49,9 @@
 
             <form method="POST" action="{{ $action }}" class="p-5">
                 @csrf
+                @if($isEdit)
+                  @method('PUT')
+                @endif
 
                 <div class="mb-4">
                     <label class="block text-sm text-gray-700 mb-1">収入額</label>
@@ -53,6 +62,7 @@
                             name="amount"
                             placeholder="300000"
                             required
+                            value="{{ old('amount', $income?->amount) }}"
                             class="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         />
                     </div>
@@ -68,9 +78,9 @@
                     </button>
                     <button
                         type="submit"
-                        class="flex-1 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md"
+                        class="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-800 text-white rounded-md"
                     >
-                        登録
+                        {{ $isEdit ? '更新' : '登録' }}
                     </button>
                 </div>
             </form>
