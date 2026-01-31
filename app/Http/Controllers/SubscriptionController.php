@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Category;
 use App\Enums\SubscriptionStatus;
 use App\Models\Subscription;
 use Illuminate\Http\Request;
@@ -25,7 +26,7 @@ class SubscriptionController extends Controller
         $countActiveSubscriptions = $this->subscriptionService->countActiveSubscriptions(Auth::id());
         $rankSubscByAmount = $this->subscriptionService->rankSubscByAmount(Auth::id());
         $sum = $this->subscriptionService->sumOfSubscAmount(Auth::id());
-        $chartData = $this->subscriptionService->allItemOfSubscAndIncome(Auth::id());
+        $chartData = $this->subscriptionService->SubscriptionChart(Auth::id());
 
         return view('subscriptions.index', compact(
             'subscriptions',
@@ -43,7 +44,8 @@ class SubscriptionController extends Controller
     public function create()
     {
         $statuese = SubscriptionStatus::cases();
-        return view('subscriptions.create', compact('statuese'));
+        $categories = Category::cases();
+        return view('subscriptions.create', compact('statuese', 'categories'));
     }
 
     /**
@@ -92,10 +94,12 @@ class SubscriptionController extends Controller
                 ->firstOrFail();
 
         $statuese = SubscriptionStatus::cases();
+        $categories = Category::cases();
 
         return view('subscriptions.edit', compact(
             'subscription',
-            'statuese'
+            'statuese',
+            'categories'
         ));
     }
 
@@ -106,10 +110,10 @@ class SubscriptionController extends Controller
     {
         $validated = $request->validate([
             'subscription_name' => 'required|string|max:255',
-            'category' => 'nullable|string|max:100',
+             'category' => 'required|in:living,entertainment,pet,insurance,study',
             'amount' => 'required|numeric|min:0',
             'billing_day' => 'required|integer|min:1|max:31',
-            'status' => 'required|in:active,paused,stopped',
+            'status' => 'required|in:active,paused,cancelled',
             'memo' => 'nullable|string',
         ]);
 
