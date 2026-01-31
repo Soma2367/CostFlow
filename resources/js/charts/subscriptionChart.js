@@ -19,6 +19,26 @@ export function subScriptionChart() {
             palette: 'palette2'
         },
         labels: labels,
+        dataLabels: {
+            enabled: true,
+            formatter: function (val, opts) {
+                const amount = opts.w.config.series[opts.seriesIndex];
+                return '¥' + amount.toLocaleString();
+            },
+        },
+        legend: {
+            formatter: function (seriesName, opts) {
+                const amount = opts.w.config.series[opts.seriesIndex];
+                return seriesName + ' - ¥' + amount.toLocaleString();
+            }
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return '¥' + val.toLocaleString();
+                }
+            }
+        },
         responsive: [{
             breakpoint: 480,
             options: {

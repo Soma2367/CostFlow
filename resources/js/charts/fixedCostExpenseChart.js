@@ -1,4 +1,5 @@
 import ApexCharts from 'apexcharts';
+import theme from 'tailwindcss/defaultTheme';
 
 export function fixedCostChart() {
     const chartId = document.getElementById('fixedCostChart');
@@ -8,15 +9,38 @@ export function fixedCostChart() {
 
     const series = JSON.parse(seriesDataSet);
     const labels = JSON.parse(labelsDataSet);
-    console.log(series, labels);
+    // console.log(series, labels);
 
     var options = {
     series: series,
     chart: {
-    width: 380,
+    width: 500,
     type: 'pie',
     },
+    theme: {
+        palette: 'palette2'
+    },
     labels: labels,
+    dataLabels: {
+            enabled: true,
+            formatter: function (val, opts) {
+                const amount = opts.w.config.series[opts.seriesIndex];
+                return '¥' + amount.toLocaleString();
+            },
+        },
+        legend: {
+            formatter: function (seriesName, opts) {
+                const amount = opts.w.config.series[opts.seriesIndex];
+                return seriesName + ' - ¥' + amount.toLocaleString();
+            }
+        },
+        tooltip: {
+            y: {
+                formatter: function (val) {
+                    return '¥' + val.toLocaleString();
+                }
+            }
+        },
     responsive: [{
         breakpoint: 480,
         options: {
@@ -30,6 +54,6 @@ export function fixedCostChart() {
     }]
     };
 
-    var chart = new ApexCharts(document.querySelector("#fixedCostChart"), options);
+    var chart = new ApexCharts(document.getElementById("fixedCostChart"), options);
         chart.render();
 }
