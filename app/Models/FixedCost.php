@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Category;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\FixedCostStatus;
 
@@ -19,6 +20,7 @@ class FixedCost extends Model
 
     public $casts = [
         'status' => FixedCostStatus::class,
+        'category' => Category::class,
     ];
 
     public function user()

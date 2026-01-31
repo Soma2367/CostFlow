@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\FixedCost;
 use App\Enums\FixedCostStatus;
 use App\Models\Income;
-use Illuminate\Support\Facades\Log;
 class FixedCostService
 {
     public function getCostDataOrderByBillingDate(int $userId)
@@ -43,10 +42,10 @@ class FixedCostService
             ->sum('amount');
     }
 
-    public function allItemOfFixedCostAndIncome(int $userId)
+    public function FixedCostChart(int $userId)
     {
         $income = Income::where('user_id', $userId)
-             ->first();
+             ->first(['amount']);
 
         $fixedCost = FixedCost::where('user_id', $userId)
              ->where('status', FixedCostStatus::ACTIVE)
@@ -60,12 +59,18 @@ class FixedCostService
 
         $remaining = $income->amount - $totalFixedCost;
 
-        $series = $fixedCost->pluck('amount')->toArray();
+        $series = $fixedCost->pluck('amount')
+                            ->map(fn($amount) => (float)$amount)
+                            ->toArray();
         $labels = $fixedCost->pluck('cost_name')->toArray();
+        // dump($series);
 
-        return [
-            'series' => array_merge([(float)$series] , [(float)$remaining]),
+        $result = [
+            'series' => array_merge($series, [(float)$remaining]),
             'labels' => array_merge($labels, ['残高'])
         ];
+        // dump($result);
+
+        return $result;
     }
 }

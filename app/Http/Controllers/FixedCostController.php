@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Category;
 use App\Enums\FixedCostStatus;
 use App\Models\FixedCost;
 use Illuminate\Http\Request;
@@ -25,7 +26,7 @@ class FixedCostController extends Controller
         $rankFixedCostByAmount = $this->fixedCostService->rankFixedCostByAmount(Auth::id());
         $sum = $this->fixedCostService->sumOfFixedAmount(Auth::id());
 
-        $chartData = $this->fixedCostService->allItemOfFixedCostAndIncome(Auth::id());
+        $chartData = $this->fixedCostService->FixedCostChart(Auth::id());
 
         return view('fixed-costs.index', compact(
             'fixedCosts',
@@ -43,7 +44,9 @@ class FixedCostController extends Controller
     public function create()
     {
         $statuese = FixedCostStatus::cases();
-        return view('fixed-costs.create', compact('statuese'));
+        $categories = Category::cases();
+
+        return view('fixed-costs.create', compact('statuese', 'categories'));
     }
 
     /**
@@ -55,7 +58,7 @@ class FixedCostController extends Controller
             'cost_name' => 'required|string|max:255',
             'amount' => 'required|numeric|min:0',
             'billing_day' => 'required|integer|min:1|max:31',
-            'category' => 'required|string|max:100',
+            'category' => 'required|in:living,entertainment,pet,insurance,study',
             'status' => 'required|in:active,inactive',
             'memo' => 'nullable|string',
         ]);
@@ -92,8 +95,9 @@ class FixedCostController extends Controller
             ->firstOrFail();
 
         $statuese = FixedCostStatus::cases();
+        $categories = Category::cases();
 
-        return view('fixed-costs.edit', compact('fixedCost', 'statuese'));
+        return view('fixed-costs.edit', compact('fixedCost', 'statuese', 'categories'));
     }
 
     /**
