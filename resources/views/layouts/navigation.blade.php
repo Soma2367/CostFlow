@@ -1,8 +1,8 @@
-<nav x-data="{ open: false }" class="w-56 bg-white border-r border-gray-100 h-screen flex flex-col">
+<nav x-data="{ open: false }" class="lg:w-56 bg-white border-r border-gray-100 h-screen flex flex-col">
 
     <!-- Logo Section -->
     <div class="p-4 border-b border-gray-100 flex justify-center">
-        <a href="{{ route('dashboard') }}">
+        <a href="{{ route('admins.index') }}">
             <x-application-logo class="h-9 w-auto fill-current text-gray-800" />
         </a>
     </div>
