@@ -41,7 +41,7 @@ class SubscriptionService
             ->sum('amount');
     }
 
-    public function allItemOfSubscAndIncome(int $userId) {
+    public function SubscriptionChart(int $userId) {
         $income = Income::where('user_id', $userId)
              ->first(['amount']);
 
