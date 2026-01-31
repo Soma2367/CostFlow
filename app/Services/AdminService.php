@@ -11,7 +11,7 @@ use App\Models\Subscription;
 class AdminService
 {
     public function getIncome(int $useId) {
-        return Income::where('user_id', $useId)->get();
+        return Income::where('user_id', $useId)->first();
     }
 
     public function subScriptionItem(int $userId) {
@@ -38,5 +38,47 @@ class AdminService
         return FixedCost::where('user_id', $userId)
             ->where('status', FixedCostStatus::ACTIVE)
             ->sum('amount');
+    }
+
+    public function adminChart(int $userId) {
+        $income = Income::where('user_id', $userId)
+             ->first('amount');
+
+        $subscriptions = Subscription::where('user_id', $userId)
+                    ->where('status', SubscriptionStatus::ACTIVE)
+                    ->get(['subscription_name', 'amount']);
+
+        $fixedCosts = FixedCost::where('user_id', $userId)
+                    ->where('status', FixedCostStatus::ACTIVE)
+                    ->get(['cost_name', 'amount']);
+
+        if(!$income || $subscriptions->isEmpty() || $fixedCosts->isEmpty() ) {
+            return null;
+        }
+
+        $subscExpense = $subscriptions->sum('amount');
+        $fixedCostExpense = $fixedCosts->sum('amount');
+
+        $totalExpense = $subscExpense + $fixedCostExpense;
+
+        $balance = $income->amount - $totalExpense;
+
+        $subscLabel = $subscriptions->pluck('subscription_name')->toArray();
+        $subscAmount = $subscriptions->pluck('amount')
+                                     ->map(fn($amount) => (float)$amount)
+                                     ->toArray();
+
+        $fixedCostLabel = $fixedCosts->pluck('cost_name')->toArray();
+        $fixedCostAmount = $fixedCosts->pluck('amount')
+                                      ->map(fn($amount) => (float)$amount)
+                                      ->toArray();
+
+        $result = [
+            'series' => array_merge($subscAmount, $fixedCostAmount, [(float)$balance]),
+            'labels' => array_merge($subscLabel, $fixedCostLabel, ['残高'])
+        ];
+
+        // dump($result);
+        return $result;
     }
 }
