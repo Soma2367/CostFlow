@@ -8,7 +8,7 @@
                 </div>
                 <a href="{{ route('fixed-costs.create') }}"
                    class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                    新規登録
+                    <x-heroicon-o-plus class="w-4 h-4" />
                 </a>
             </div>
 
@@ -19,10 +19,10 @@
                     <p class="text-sm text-gray-500 mt-1">サービス</p>
                 </div>
 
-                <div class="bg-blue-500 rounded-lg shadow p-6 text-white">
+                <div class="bg-blue-600 rounded-lg shadow p-6 text-white">
                     <p class="text-sm mb-2">月額合計</p>
                     <p class="text-4xl font-bold">¥{{ number_format($sum) }}</p>
-                    <p class="text-sm mt-1">/月</p>
+                    <p class="text-right text-sm mt-1">/月</p>
                 </div>
 
                 <div class="bg-white rounded-lg shadow p-6">
@@ -30,21 +30,6 @@
                     <p class="text-4xl font-bold text-green-500">{{ $countActiveFixedCosts }}</p>
                     <p class="text-sm text-gray-500 mt-1">有効サービス</p>
                 </div>
-            </div>
-
-            <div class="m-8">
-                <h2>収入に対する固定費割合</h2>
-
-                @if($chartData)
-                  <div
-                  id="fixedCostChart"
-                  data-series='@json($chartData["series"])'
-                  data-labels='@json($chartData["labels"])'
-                >
-                </div>
-                @else
-                  <p>データがありません</p>
-                @endif
             </div>
 
             <div class="mb-6">
@@ -61,12 +46,12 @@
                             <span class="text-2xl font-bold {{ $rankStyle->textClass() }}">{{ $index + 1 }}位</span>
                             <span class="text-2xl font-bold text-gray-800">{{ $fixedCost->cost_name }}</span>
                         </div>
-                        <p class="font-bold text-gray-800">{{ $fixedCost->amount }}</p>
+                        <p class="font-bold text-gray-800">¥{{ number_format($fixedCost->amount) }}</p>
                         <p class="text-sm text-gray-500">
-                            {{ $fixedCost->category }} • 毎月{{ $fixedCost->billing_day }}日
+                            <span class="{{ $fixedCost->category->CategoryColor() }}">{{ $fixedCost->category->label() }}</span> • 毎月{{ $fixedCost->billing_day }}日
                         </p>
                     </div>
-                  @endforeach
+                   @endforeach
                 </div>
                 @else
                    <div class="text-center py-8 text-gray-500">
@@ -74,61 +59,100 @@
                    </div>
                 @endif
             </div>
-
-            <div class="bg-white rounded-lg shadow">
-                <div class="px-6 py-4 border-b">
-                    <h3 class="text-lg font-bold text-gray-800">固定費一覧（支払日順）</h3>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <div class="lg:col-span-2 bg-white rounded-xl shadow-sm overflow-hidden flex-1 flex flex-col">
+                    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                        <h2 class="text-lg font-bold text-gray-800">支出分析</h2>
+                        <span class="text-xs font-medium px-2.5 py-0.5 rounded bg-purple-100 text-purple-800">管理画面</span>
+                    </div>
+                    <div class="p-6 flex-1 flex justify-center items-center min-h-[350px]">
+                        @if($chartData)
+                          <div
+                                id="fixedCostChart"
+                                class="w-full"
+                                data-series='@json($chartData["series"])'
+                                data-labels='@json($chartData["labels"])'
+                           >
+                           </div>
+                        @else
+                           <p class="text-gray-400 italic">データが不足しています</p>
+                        @endif
+                    </div>
                 </div>
-                <div class="p-4">
-                    @forelse($fixedCosts as $fixedCost)
-                        <div class="p-4 mb-3 bg-gray-50 rounded-lg border-l-4 border-green-500">
-                            <div class="flex items-center justify-between mb-3">
-                                <div class="flex-1">
-                                    <p class="font-bold text-gray-800 mb-1">
-                                        {{ $fixedCost->cost_name }}
-                                    </p>
-                                    <p class="text-sm text-gray-600">
-                                        {{ $fixedCost->category }} • 毎月{{ $fixedCost->billing_day }}日
+
+                <div class="bg-white rounded-xl shadow flex flex-col max-h-[500px]">
+                    <div class="px-6 py-4 border-b">
+                        <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                            <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                            固定費一覧（支払日順）
+                        </h3>
+                    </div>
+                    <div class="p-4 overflow-y-auto">
+                        @forelse($fixedCosts as $fixedCost)
+                            <div class="p-4 mb-3 bg-gray-50 rounded-lg border-l-4 border-blue-500">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex-1">
+                                        <p class="font-bold text-gray-800 mb-1">
+                                            {{ $fixedCost->cost_name }}
+                                        </p>
+                                        <p class="text-sm text-gray-600">
+                                            <span class="{{ $fixedCost->category->CategoryColor() }}">{{ $fixedCost->category->label() }}</span> • 毎月{{ $fixedCost->billing_day }}日
+                                        </p>
+                                    </div>
+                                    <p class="text-2xl font-bold text-gray-800 mr-4">
+                                        ¥{{ number_format($fixedCost->amount) }}
                                     </p>
                                 </div>
-                                <p class="text-2xl font-bold text-gray-800 mr-4">
-                                    ¥{{ number_format($fixedCost->amount) }}
-                                </p>
-                            </div>
 
-                            <div class="flex items-center justify-between">
-                                <span class="px-3 py-1 text-sm font-semibold rounded {{ $fixedCost->status->statusColor() }}">
-                                    {{ $fixedCost->status->label() }}
-                                </span>
+                                <div class="flex items-center justify-between">
+                                    <div class="inline-block relative group">
+                                        <div class="text-gray-500 hover:text-blue-700 transition duration-300 ease-in-out z-20">
+                                            <x-heroicon-o-ellipsis-horizontal-circle class="w-6 h-6" />
+                                        </div>
+                                        <div class="absolute left-full top-0 flex items-center gap-2 pl-2 opacity-0 group-hover:opacity-100 translate-x-[-10px] group-hover:translate-x-0 transition duration-300">
+                                            <form
+                                                class="flex items-center"
+                                                action="{{ route('fixed-costs.destroy', $fixedCost->id) }}"
+                                                method="POST"
+                                                onsubmit="return confirm('本当に削除しますか？');">
+                                                @csrf
+                                                @method('DELETE')
+                                               <button type="submit" class="hover:text-red-500">
+                                                <x-heroicon-o-trash class="w-5 h-5" />
+                                               </button>
+                                            </form>
+                                            <a href="{{ route('fixed-costs.edit', $fixedCost) }}" class="flex items-center hover:text-blue-500">
+                                                <x-heroicon-o-pencil-square class="w-5 h-5" />
+                                            </a>
+                                            <a href="{{ route('fixed-costs.show', $fixedCost) }}"  class="flex items-center hover:text-green-500">
+                                                <x-heroicon-o-magnifying-glass class="w-5 h-5" />
+                                            </a>
+                                        </div>
+                                    </div>
 
-                                <div class="flex gap-2">
-                                    <a href="{{ route('fixed-costs.show', $fixedCost) }}"
-                                    class="px-4 py-2 bg-gray-500 text-white text-sm rounded hover:bg-gray-600">
-                                        詳細
-                                    </a>
-                                    <a href="{{ route('fixed-costs.edit', $fixedCost) }}"
-                                    class="px-4 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600">
-                                        編集
-                                    </a>
-                                    <form action="{{ route('fixed-costs.destroy', $fixedCost->id) }}"
-                                        method="POST"
-                                        onsubmit="return confirm('本当に削除しますか？');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                                class="px-4 py-2 bg-red-500 text-white text-sm rounded hover:bg-red-600">
-                                            削除
-                                        </button>
-                                    </form>
+                                   <div class="flex items-center gap-2">
+                                        @if($fixedCost->memo)
+                                            <span class="inline-flex items-center gap-1.5 px-3 py-1 text-sm font-semibold rounded-full bg-blue-100 text-blue-700 border border-blue-200">
+                                                <x-heroicon-o-check class="w-4 h-4" />
+                                                メモ
+                                            </span>
+                                        @endif
+
+                                        <span class="inline-flex items-center px-3 py-1 text-sm font-semibold rounded-full {{ $fixedCost->status->statusColor() }}">
+                                            {{ $fixedCost->status->label() }}
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    @empty
-                        <div class="p-8 text-center text-gray-500">
-                            登録されている固定費はありません
-                        </div>
-                    @endforelse
+                        @empty
+                            <div class="p-8 text-center text-gray-500">
+                                登録されている固定費はありません
+                            </div>
+                        @endforelse
+                    </div>
                 </div>
+            </div>
+
             </div>
         </div>
     </div>

@@ -25,7 +25,7 @@
 
                 <div class="mb-4">
                     <label class="text-sm text-gray-600 font-semibold block mb-2">カテゴリー</label>
-                    <p class="text-base text-gray-800">{{ $fixedCost->category }}</p>
+                    <p class="text-base text-gray-800">{{ $fixedCost->category->label() }}</p>
                 </div>
 
                 <div class="mb-4">
@@ -44,12 +44,12 @@
                     </div>
                 @endif
 
-                <div class="pt-4 border-t border-gray-200">
+                {{-- <div class="pt-4 border-t border-gray-200">
                     <div class="text-sm text-gray-500 space-y-1">
                         <p>登録日: {{ $fixedCost->created_at->format('Y年m月d日 H:i') }}</p>
                         <p>更新日: {{ $fixedCost->updated_at->format('Y年m月d日 H:i') }}</p>
                     </div>
-                </div>
+                </div> --}}
             </div>
 
             <div class="flex gap-3">
