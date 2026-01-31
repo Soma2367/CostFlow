@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Category;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\SubscriptionStatus;
 
@@ -19,6 +20,7 @@ class Subscription extends Model
 
     protected $casts = [
         'status' => SubscriptionStatus::class,
+        'category' => Category::class,
     ];
 
     public function user()
