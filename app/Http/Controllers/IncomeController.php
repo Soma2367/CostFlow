@@ -35,7 +35,6 @@ class IncomeController extends Controller
 
         Income::create([
             'amount' => $validated['amount'],
-            'user_id' => Auth::id(),
         ]);
 
         return redirect()
@@ -62,9 +61,17 @@ class IncomeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Income $income)
     {
-        //
+        $validated = $request->validate([
+            'amount' => 'required|numeric|min:0',
+        ]);
+
+        $income->update($validated);
+
+        return redirect()
+            ->route('admins.index')
+            ->with('success', '収入を登録しました。');
     }
 
     /**
