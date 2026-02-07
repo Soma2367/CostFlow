@@ -3,7 +3,7 @@
         <div class="max-w-6xl mx-auto">
             <div class="mb-6 flex justify-between items-center">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-800">固定費管理</h1>
+                    <h1 class="md:text-2xl lg:text-3xl font-bold text-gray-800">固定費</h1>
                     <p class="text-gray-600 mt-1">月額の固定費を管理できます</p>
                 </div>
                 <a href="{{ route('fixed-costs.create') }}"
@@ -21,7 +21,7 @@
 
                 <div class="bg-blue-600 rounded-lg shadow p-6 text-white">
                     <p class="text-sm mb-2">月額合計</p>
-                    <p class="text-4xl font-bold">¥{{ number_format($sum) }}</p>
+                    <p class="text-4xl font-bold">¥{{ number_format($sumFixedCost) }}</p>
                     <p class="text-right text-sm mt-1">/月</p>
                 </div>
 
@@ -59,28 +59,30 @@
                    </div>
                 @endif
             </div>
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 h-[550px]">
                 <div class="lg:col-span-2 bg-white rounded-xl shadow-sm overflow-hidden flex-1 flex flex-col">
                     <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
                         <h2 class="text-lg font-bold text-gray-800">支出分析</h2>
                         <span class="text-xs font-medium px-2.5 py-0.5 rounded bg-purple-100 text-purple-800">管理画面</span>
                     </div>
-                    <div class="p-6 flex-1 flex justify-center items-center min-h-[350px]">
+                    <div class="flex-1 flex flex-col justify-center items-center overflow-hidden">
                         @if($chartData)
                           <div
                                 id="fixedCostChart"
-                                class="w-full"
+                                class="w-full max-w-full"
                                 data-series='@json($chartData["series"])'
                                 data-labels='@json($chartData["labels"])'
                            >
                            </div>
-                        @else
-                           <p class="text-gray-400 italic">データが不足しています</p>
+                        @elseif(!$income->amount)
+                            <p class="text-gray-400 italic">所持金を登録してください</p>
+                        @elseif($income->amount < $sumFixedCost)
+                           <p class="text-gray-400 italic">支出が所持金を上回ってます:(</p>
                         @endif
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow flex flex-col max-h-[500px]">
+                <div class="bg-white rounded-xl shadow flex flex-col h-full overflow-hidden">
                     <div class="px-6 py-4 border-b">
                         <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
                             <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
