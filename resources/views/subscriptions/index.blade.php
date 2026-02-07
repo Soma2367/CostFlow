@@ -3,8 +3,8 @@
         <div class="max-w-6xl mx-auto">
             <div class="mb-6 flex justify-between items-center">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-800">サブスク管理</h1>
-                    <p class="text-gray-600 mt-1">月額のサブスクリプションサービスを管理できます</p>
+                    <h1 class="md:text-2xl lg:text-3xl font-bold text-gray-800">サブスクリプション</h1>
+                    <p class="text-gray-600 mt-1">月額のサブスクリプションサービス管理</p>
                 </div>
                 <a href="{{ route('subscriptions.create') }}"
                    class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
@@ -61,28 +61,30 @@
                 @endif
             </div>
 
-             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 h-[550px]">
                 <div class="lg:col-span-2 bg-white rounded-xl shadow-sm overflow-hidden flex-1 flex flex-col">
                     <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
                         <h2 class="text-lg font-bold text-gray-800">支出分析</h2>
                         <span class="text-xs font-medium px-2.5 py-0.5 rounded bg-purple-100 text-purple-800">管理画面</span>
                     </div>
-                    <div class="p-6 flex-1 flex justify-center items-center min-h-[350px]">
+                    <div class="flex-1 flex flex-col justify-center items-center overflow-hidden">
                         @if($chartData)
                           <div
                                 id="subScriptionChart"
-                                class="w-full"
+                                class="w-full max-w-full"
                                 data-series='@json($chartData["series"])'
-                    data-labels='@json($chartData["labels"])'
+                                data-labels='@json($chartData["labels"])'
                            >
                            </div>
-                        @else
+                        @elseif(!$income->amount)
+                            <p class="text-gray-400 italic">所持金を登録してください</p>
+                        @elseif($income->amount < $sumSubsc)
                            <p class="text-gray-400 italic">データが不足しています</p>
                         @endif
                     </div>
                 </div>
 
-                <div class="bg-white rounded-xl shadow flex flex-col max-h-[500px]">
+                <div class="bg-white rounded-xl shadow flex flex-col h-full overflow-hidden">
                     <div class="px-6 py-4 border-b">
                         <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
                             <span class="w-2 h-2 bg-purple-500 rounded-full"></span>

@@ -21,6 +21,7 @@ class SubscriptionController extends Controller
 
     public function index()
     {
+        $income = $this->subscriptionService->getIncome(Auth::id());
         $subscriptions = $this->subscriptionService->getSubscDataOrderByBillingDate(Auth::id());
         $countSubscriptions = $this->subscriptionService->countSubscriptions(Auth::id());
         $countActiveSubscriptions = $this->subscriptionService->countActiveSubscriptions(Auth::id());
@@ -29,6 +30,7 @@ class SubscriptionController extends Controller
         $chartData = $this->subscriptionService->SubscriptionChart(Auth::id());
 
         return view('subscriptions.index', compact(
+            'income',
             'subscriptions',
             'countSubscriptions',
             'countActiveSubscriptions',
@@ -43,9 +45,9 @@ class SubscriptionController extends Controller
      */
     public function create()
     {
-        $statuese = SubscriptionStatus::cases();
-        $categories = Category::cases();
-        return view('subscriptions.create', compact('statuese', 'categories'));
+        $statuses = SubscriptionStatus::options();
+        $categories = Category::options();
+        return view('subscriptions.create', compact('statuses', 'categories'));
     }
 
     /**
@@ -93,12 +95,12 @@ class SubscriptionController extends Controller
                 ->where('user_id', Auth::id())
                 ->firstOrFail();
 
-        $statuese = SubscriptionStatus::cases();
-        $categories = Category::cases();
+        $statuses = SubscriptionStatus::options();
+        $categories = Category::options();
 
         return view('subscriptions.edit', compact(
             'subscription',
-            'statuese',
+            'statuses',
             'categories'
         ));
     }

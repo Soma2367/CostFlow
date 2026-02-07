@@ -7,6 +7,10 @@ use App\Enums\SubscriptionStatus;
 use App\Models\Income;
 class SubscriptionService
 {
+     public function getIncome(int $userId) {
+        return Income::where('user_id', $userId)->first();
+    }
+
     public function getSubscDataOrderByBillingDate(int $userId)
     {
         return Subscription::where('user_id', $userId)
@@ -49,24 +53,31 @@ class SubscriptionService
                     ->where('status', SubscriptionStatus::ACTIVE)
                     ->get(['subscription_name', 'amount']);
 
-        if(!$income || $subscriptions->isEmpty()) {
+        if(!$income && $subscriptions->isEmpty()) {
             return null;
         }
 
         $totalSubsc = $subscriptions->sum('amount');
         $balance = $income->amount - $totalSubsc;
+
+        $remaining_series = [];
+        $remaining_labels = [];
+
+        if($balance > 0) {
+            $remaining_series[] = $balance;
+            $remaining_labels[] = '残高';
+        }
+
         // dump($balance);
 
-        $series = $subscriptions->pluck('amount')
-                                ->map(fn($amount) => (float)$amount)
-                                ->toArray();
+        $series = $subscriptions->pluck('amount')->toArray();
 
         $labels = $subscriptions->pluck('subscription_name')->toArray();
         // dump($labels, $series);
 
-        $result = [
-            'series' => array_merge($series, [(float)$balance]),
-            'labels' => array_merge($labels, ['残高'])
+       $result = [
+            'series' => array_merge($series, $remaining_series),
+            'labels' => array_merge($labels, $remaining_labels),
         ];
         // dump($result);
 
