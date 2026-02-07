@@ -7,6 +7,10 @@ use App\Enums\FixedCostStatus;
 use App\Models\Income;
 class FixedCostService
 {
+    public function getIncome(int $userId) {
+        return Income::where('user_id', $userId)->first();
+    }
+
     public function getCostDataOrderByBillingDate(int $userId)
     {
         return FixedCost::where('user_id', $userId)
@@ -51,23 +55,28 @@ class FixedCostService
              ->where('status', FixedCostStatus::ACTIVE)
              ->get(['cost_name', 'amount']);
 
-        if(!$income || $fixedCost->isEmpty()) {
+        if(!$income && $fixedCost->isEmpty()) {
             return null;
         }
 
         $totalFixedCost = $fixedCost->sum('amount');
+        $balance = $income->amount - $totalFixedCost;
 
-        $remaining = $income->amount - $totalFixedCost;
+        $remaining_series = [];
+        $remaining_labels = [];
 
-        $series = $fixedCost->pluck('amount')
-                            ->map(fn($amount) => (float)$amount)
-                            ->toArray();
+        if($balance > 0) {
+            $remaining_series[] = $balance;
+            $remaining_labels[] = '残高';
+        }
+
+        $series = $fixedCost->pluck('amount')->toArray();
         $labels = $fixedCost->pluck('cost_name')->toArray();
         // dump($series);
 
         $result = [
-            'series' => array_merge($series, [(float)$remaining]),
-            'labels' => array_merge($labels, ['残高'])
+            'series' => array_merge($series, $remaining_series),
+            'labels' => array_merge($labels, $remaining_labels),
         ];
         // dump($result);
 
