@@ -38,7 +38,7 @@
                                     class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 text-base outline-none text-gray-700 py-2 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                     <option value="">選択してください</option>
                                     @for($i = 1; $i <= 31; $i++)
-                                        <option value="{{ $i }}" {{ (int) old('billing_day', $fixedCost->billing_day) === $i ? 'selected' : '' }}>
+                                        <option value="{{ $i }}" {{ old('billing_day', $fixedCost->billing_day) === $i ? 'selected' : '' }}>
                                             毎月{{ $i }}日
                                         </option>
                                     @endfor
@@ -47,15 +47,19 @@
                         </div>
 
                         <div class="p-2 w-full">
-                          <div class="relative">
+                            <div class="relative">
                                 <label for="category" class="leading-7 text-sm text-gray-600 font-semibold">カテゴリー<span class="text-red-500">*</span></label>
                                 <select id="category" name="category" required
                                     class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 text-base outline-none text-gray-700 py-2 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                    <option value="">選択してください</option>
                                     @foreach($categories as $category)
-                                        <option value="{{ old('category', $fixedCost->category) }}">{{ $category->label() }}</option>
+                                        <option value="{{ $category['value'] }}"
+                                            {{ old('category', $fixedCost->category->value) === $category['value'] ? 'selected' : '' }}>
+                                            {{ $category['label'] }}
+                                        </option>
                                     @endforeach
                                 </select>
-                          </div>
+                            </div>
                         </div>
 
                         <div class="p-2 w-full">
@@ -63,10 +67,11 @@
                                 <label for="status" class="leading-7 text-sm text-gray-600 font-semibold">ステータス <span class="text-red-500">*</span></label>
                                 <select id="status" name="status" required
                                     class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-200 text-base outline-none text-gray-700 py-2 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                    @foreach($statuese as $status)
-                                        <option value="{{ $status->value }}"
-                                            {{ old('status', $fixedCost->status->value) === $status->value ? 'selected' : '' }}>
-                                            {{ $status->label() }}
+                                    <option value="">選択してください</option>
+                                    @foreach($statuses as $status)
+                                        <option value="{{ $status['value'] }}"
+                                            {{ old('status', $fixedCost->status->value) === $status['value'] ? 'selected' : '' }}>
+                                            {{ $status['label'] }}
                                         </option>
                                     @endforeach
                                 </select>
