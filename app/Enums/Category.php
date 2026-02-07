@@ -32,7 +32,7 @@ enum Category: string
         };
     }
 
-    public static function option(): array
+    public static function options(): array
     {
         return array_map(fn($case) => [
             'value' => $case->value,
