@@ -17,7 +17,7 @@ return new class extends Migration
                    ->unique()
                    ->constrained()
                    ->cascadeOnDelete();
-            $table->decimal('amount', 12, 2);
+            $table->integer('amount');
             $table->timestamps();
         });
     }
