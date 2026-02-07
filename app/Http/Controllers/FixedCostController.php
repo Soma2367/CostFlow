@@ -20,20 +20,22 @@ class FixedCostController extends Controller
 
     public function index()
     {
+        $income = $this->fixedCostService->getIncome(Auth::id());
         $fixedCosts = $this->fixedCostService->getCostDataOrderByBillingDate(Auth::id());
         $countFixedCosts = $this->fixedCostService->countFixedCost(Auth::id());
         $countActiveFixedCosts = $this->fixedCostService->countActiveFixedCost(Auth::id());
         $rankFixedCostByAmount = $this->fixedCostService->rankFixedCostByAmount(Auth::id());
-        $sum = $this->fixedCostService->sumOfFixedAmount(Auth::id());
+        $sumFixedCost = $this->fixedCostService->sumOfFixedAmount(Auth::id());
 
         $chartData = $this->fixedCostService->FixedCostChart(Auth::id());
 
         return view('fixed-costs.index', compact(
+            'income',
             'fixedCosts',
             'countFixedCosts',
             'countActiveFixedCosts',
             'rankFixedCostByAmount',
-            'sum',
+            'sumFixedCost',
             'chartData'
         ));
     }
@@ -43,10 +45,10 @@ class FixedCostController extends Controller
      */
     public function create()
     {
-        $statuese = FixedCostStatus::cases();
-        $categories = Category::cases();
+        $statuses = FixedCostStatus::options();
+        $categories = Category::options();
 
-        return view('fixed-costs.create', compact('statuese', 'categories'));
+        return view('fixed-costs.create', compact('statuses', 'categories'));
     }
 
     /**
@@ -94,10 +96,10 @@ class FixedCostController extends Controller
             ->where('user_id', Auth::id())
             ->firstOrFail();
 
-        $statuese = FixedCostStatus::cases();
-        $categories = Category::cases();
+        $statuses = FixedCostStatus::options();
+        $categories = Category::options();
 
-        return view('fixed-costs.edit', compact('fixedCost', 'statuese', 'categories'));
+        return view('fixed-costs.edit', compact('fixedCost', 'statuses', 'categories'));
     }
 
     /**
