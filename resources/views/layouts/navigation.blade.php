@@ -1,9 +1,13 @@
-<nav x-data="{ open: false }" class="lg:w-56 bg-white border-r border-gray-100 h-screen flex flex-col">
+<nav
+  :class="sideMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
+  class="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-100 transform transition-transform duration-300 ease-in-out lg:relative lg:flex lg:flex-col"
+>
 
     <!-- Logo Section -->
     <div class="p-4 border-b border-gray-100 flex justify-center">
-        <a href="{{ route('admins.index') }}">
-            <x-application-logo class="h-9 w-auto fill-current text-gray-800" />
+        <a href="{{ route('admins.index') }}" class="w-16 h-16 rounded-2xl overflow-hidden shadow-sm">
+            {{-- <x-application-logo class="h-9 w-auto fill-current text-gray-800" /> --}}
+            <img src="{{ asset('icons/money.png') }}" alt="icon" class="w-full h-full object-cover">
         </a>
     </div>
 
@@ -47,3 +51,9 @@
         </x-dropdown>
     </div>
 </nav>
+
+<div
+  x-show="sideMenuOpen"
+  @click="sideMenuOpen = false"
+  class="fixed inset-0 z-40 bg-gray-900/50 lg:hidden"
+></div>

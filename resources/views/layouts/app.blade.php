@@ -7,6 +7,7 @@
 
         <title>{{ config('app.name', 'CostFlow') }}</title>
 
+        <link rel="icon" type="image/png" href="{{ asset('icons/money.png') }}">
          {{-- GoogleFonts --}}
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,14 +16,22 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased bg-gray-50">
-        <div class="flex h-screen">
+    <body x-data="{ sideMenuOpen: false }" class="font-sans antialiased bg-gray-50">
+        <div class="flex h-screen overflow-hidden">
             @include('layouts.navigation')
 
-            <!-- Main Content -->
-            <main class="flex-1 overflow-y-auto">
-                    {{ $slot }}
-            </main>
+            <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+                <header class="lg:hidden bg-white border-b border-gray-200 p-4 flex items-center justify-end sticky top-0 z-30">
+                    <button @click="sideMenuOpen = true">
+                        <x-heroicon-o-bars-3 class="w-6 h-6" />
+                    </button>
+                </header>
+
+                <!-- Main Content -->
+                <main class="flex-1 overflow-y-auto">
+                        {{ $slot }}
+                </main>
+            </div>
         </div>
     </body>
 </html>
