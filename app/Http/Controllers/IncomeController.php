@@ -34,6 +34,7 @@ class IncomeController extends Controller
         ]);
 
         Income::create([
+            'user_id' => Auth::id(),
             'amount' => $validated['amount'],
         ]);
 
