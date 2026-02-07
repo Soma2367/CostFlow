@@ -2,10 +2,10 @@
     <div class="p-6 bg-gray-50 min-h-screen">
         <div class="max-w-7xl mx-auto">
 
-            <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div class="mb-8 flex md:flex-row md:items-end justify-between gap-4">
                 <div>
-                    <h1 class="text-3xl font-bold text-gray-800">ダッシュボード</h1>
-                    <p class="text-gray-600 mt-1">収支のバランスと内訳を管理します</p>
+                    <h1 class="md:text-2xl lg:text-3xl font-bold text-gray-800">管理画面</h1>
+                    <p class="md:text-xl text-gray-600 mt-1">収支のバランスと内訳を管理します</p>
                 </div>
 
                 <div class="flex items-center gap-3">
@@ -34,8 +34,8 @@
                             <p class="text-sm opacity-90 mb-1">総支出額</p>
                             <p class="text-3xl font-bold">¥{{ number_format($totalExpense) }}</p>
                             @php
-                                $incomeVal = $income ? $income->amount : 0;
-                                $percentage = $incomeVal > 0 ? min(round(($totalExpense / $incomeVal) * 100, 1), 100) : 0;
+                                $holdings = $income ? $income->amount : 0;
+                                $percentage = $holdings > 0 ? min(round(($totalExpense / $holdings) * 100, 1), 100) : 0;
                             @endphp
                             <div class="mt-3">
                                 <div class="flex justify-between text-xs mb-1">
@@ -64,8 +64,10 @@
                                      data-series='@json($adminData["series"])'
                                      data-labels='@json($adminData["labels"])'>
                                 </div>
-                            @else
-                                <p class="text-gray-400 italic">データが不足しています</p>
+                            @elseif(!$income->amount)
+                                <p class="text-gray-400 italic">所持金を登録してください</p>
+                            @elseif($income->amount < $totalExpense)
+                                <p class="text-gray-400 italic">支出が収入を上回ってます:(</p>
                             @endif
                         </div>
                     </div>
