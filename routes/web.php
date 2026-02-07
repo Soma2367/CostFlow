@@ -14,10 +14,10 @@ Route::get('/', function () {
 
 // Authenticated & Verified Routes
 Route::middleware(['auth', 'verified'])->group(function () {
-    // Dashboard
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    // // Dashboard
+    // Route::get('/dashboard', function () {
+    //     return view('dashboard');
+    // })->name('dashboard');
 
     // Admin
     Route::get('/admin', [AdminController::class, 'index'])->name('admins.index');
