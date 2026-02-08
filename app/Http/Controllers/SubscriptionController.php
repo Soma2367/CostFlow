@@ -77,11 +77,11 @@ class SubscriptionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Subscription $subscription)
     {
-        $subscription = Subscription::where('id', $id)
-        ->where('user_id', Auth::id())
-        ->firstOrFail();
+        if($subscription->user_id !== Auth::id()) {
+            abort(403);
+        };
 
         return view('subscriptions.show', compact('subscription'));
     }
@@ -89,11 +89,11 @@ class SubscriptionController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Subscription $subscription)
     {
-        $subscription = Subscription::where('id', $id)
-                ->where('user_id', Auth::id())
-                ->firstOrFail();
+        if($subscription->user_id !== Auth::id()) {
+            abort(403);
+        }
 
         $statuses = SubscriptionStatus::options();
         $categories = Category::options();
@@ -110,6 +110,10 @@ class SubscriptionController extends Controller
      */
     public function update(Request $request, Subscription $subscription)
     {
+        if($subscription->user_id !== Auth::id()) {
+            abort(403);
+        };
+
         $validated = $request->validate([
             'subscription_name' => 'required|string|max:255',
              'category' => 'required|in:living,entertainment,pet,insurance,study',
@@ -129,12 +133,11 @@ class SubscriptionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Subscription $subscription)
     {
-        $subscription = Subscription::where('id', $id)
-            ->where('user_id', Auth::id())
-            ->firstOrFail();
-
+        if($subscription->user_id !== Auth::id()) {
+            abort(403);
+        };
         $subscription->delete();
 
         return redirect()

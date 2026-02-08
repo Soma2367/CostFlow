@@ -78,11 +78,11 @@ class FixedCostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(FixedCost $fixedCost)
     {
-        $fixedCost = FixedCost::where('id', $id)
-            ->where('user_id', Auth::id())
-            ->firstOrFail();
+        if($fixedCost->user_id !== Auth::id()) {
+            abort(403);
+        };
 
         return view('fixed-costs.show', compact('fixedCost'));
     }
@@ -90,11 +90,11 @@ class FixedCostController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(FixedCost $fixedCost)
     {
-        $fixedCost = FixedCost::where('id', $id)
-            ->where('user_id', Auth::id())
-            ->firstOrFail();
+        if($fixedCost->user_id !== Auth::id()) {
+            abort(403);
+        };
 
         $statuses = FixedCostStatus::options();
         $categories = Category::options();
@@ -107,6 +107,10 @@ class FixedCostController extends Controller
      */
     public function update(Request $request, FixedCost $fixedCost)
     {
+        if($fixedCost->user_id !== Auth::id()) {
+            abort(403);
+        };
+
         $validated = $request->validate([
             'cost_name' => 'required|string|max:255',
             'category' => 'nullable|string|max:100',
@@ -126,11 +130,11 @@ class FixedCostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(FixedCost $fixedCost)
     {
-        $fixedCost = FixedCost::where('id', $id)
-            ->where('user_id', Auth::id())
-            ->firstOrFail();
+        if($fixedCost->user_id !== Auth::id()) {
+            abort(403);
+        };
 
         $fixedCost->delete();
 
