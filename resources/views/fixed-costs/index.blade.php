@@ -74,7 +74,7 @@
                                 data-labels='@json($chartData["labels"])'
                            >
                            </div>
-                        @elseif(!$income->amount)
+                        @elseif(!$income)
                             <p class="text-gray-400 italic">所持金を登録してください</p>
                         @elseif($income->amount < $sumFixedCost)
                            <p class="text-gray-400 italic">支出が所持金を上回ってます:(</p>

@@ -64,7 +64,7 @@
                                      data-series='@json($adminData["series"])'
                                      data-labels='@json($adminData["labels"])'>
                                 </div>
-                            @elseif(!$income->amount)
+                            @elseif(!$income)
                                 <p class="text-gray-400 italic">所持金を登録してください</p>
                             @elseif($income->amount < $totalExpense)
                                 <p class="text-gray-400 italic">支出が収入を上回ってます:(</p>
