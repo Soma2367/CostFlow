@@ -52,7 +52,11 @@ class AdminService
                     ->where('status', FixedCostStatus::ACTIVE)
                     ->get(['cost_name', 'amount']);
 
-        if(!$income && $subscriptions->isEmpty() && $fixedCosts->isEmpty() ) {
+        if(!$income) {
+            return null;
+        }
+
+        if($subscriptions->isEmpty() && $fixedCosts->isEmpty()) {
             return null;
         }
 

@@ -53,7 +53,10 @@ class SubscriptionService
                     ->where('status', SubscriptionStatus::ACTIVE)
                     ->get(['subscription_name', 'amount']);
 
-        if(!$income && $subscriptions->isEmpty()) {
+        if(!$income) {
+            return null;
+        }
+        if($subscriptions->isEmpty()) {
             return null;
         }
 
