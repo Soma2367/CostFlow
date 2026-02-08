@@ -5,9 +5,12 @@ namespace App\Models;
 use App\Enums\Category;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\FixedCostStatus;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class FixedCost extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'user_id',
         'cost_name',

@@ -5,9 +5,11 @@ namespace App\Models;
 use App\Enums\Category;
 use Illuminate\Database\Eloquent\Model;
 use App\Enums\SubscriptionStatus;
-
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Subscription extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'user_id',
         'subscription_name',
