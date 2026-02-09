@@ -39,7 +39,7 @@
                             @endphp
                             <div class="mt-3">
                                 <div class="flex justify-between text-xs mb-1">
-                                    <span>収入充当率</span>
+                                    <span>支出割合</span>
                                     <span>{{ $percentage }}%</span>
                                 </div>
                                 <div class="w-full bg-blue-400/50 rounded-full h-1.5">
