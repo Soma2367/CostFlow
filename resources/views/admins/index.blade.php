@@ -60,14 +60,22 @@
                         <div class="p-6 flex-1 flex justify-center items-center min-h-[350px]">
                             @if($adminData)
                                 <div id="adminChart"
-                                     class="w-full"
-                                     data-series='@json($adminData["series"])'
-                                     data-labels='@json($adminData["labels"])'>
+                                    class="w-full h-full"
+                                    data-series='@json($adminData["series"])'
+                                    data-labels='@json($adminData["labels"])'>
                                 </div>
-                            @elseif(!$income)
-                                <p class="text-gray-400 italic">所持金を登録してください</p>
-                            @elseif($income->amount < $totalExpense)
-                                <p class="text-gray-400 italic">支出が収入を上回ってます:(</p>
+                            @else
+                                <div class="text-center space-y-2">
+                                    @if(!$income)
+                                        <p class="text-gray-500 text-lg italic">所持金を登録してください</p>
+                                        <p class="text-sm text-gray-500 italic">グラフを表示するには収入情報が必要です</p>
+                                    @elseif($income->amount < $totalExpense)
+                                        <p class="text-gray-500 text-lg italic">支出が収入を上回ってます:(</p>
+                                        <p class="text-sm text-gray-500 italic">収入額を見直すか、支出を削減してください</p>
+                                    @else
+                                        <p class="text-gray-500 text-lg italic">支出データがありません</p>
+                                    @endif
+                                </div>
                             @endif
                         </div>
                     </div>

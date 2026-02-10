@@ -65,19 +65,26 @@
                         <h2 class="text-lg font-bold text-gray-800">支出分析</h2>
                         <span class="text-xs font-medium px-2.5 py-0.5 rounded bg-purple-100 text-purple-800">管理画面</span>
                     </div>
-                    <div class="flex-1 flex flex-col justify-center items-center overflow-hidden">
+                    <div class="flex-1 flex flex-col justify-center items-center min-h-[400px] py-8">
                         @if($chartData)
-                          <div
+                            <div
                                 id="fixedCostChart"
-                                class="w-full max-w-full"
+                                class="w-full max-w-full h-full"
                                 data-series='@json($chartData["series"])'
                                 data-labels='@json($chartData["labels"])'
-                           >
-                           </div>
-                        @elseif(!$income)
-                            <p class="text-gray-400 italic">所持金を登録してください</p>
-                        @elseif($income->amount < $sumFixedCost)
-                           <p class="text-gray-400 italic">支出が所持金を上回ってます:(</p>
+                            ></div>
+                        @else
+                            <div class="text-center space-y-2">
+                                @if(!$income)
+                                    <p class="text-gray-500 text-lg italic">所持金を登録してください</p>
+                                    <p class="text-sm text-gray-500 italic">グラフを表示するには収入情報が必要です</p>
+                                @elseif($income->amount < $sumFixedCost)
+                                    <p class="text-gray-500 text-lg italic">支出が所持金を上回ってます:(</p>
+                                    <p class="text-sm text-gray-500 italic">収入額を見直すか、固定費を削減してください</p>
+                                @else
+                                    <p class="text-gray-500 text-lg italic">固定費データがありません</p>
+                                @endif
+                            </div>
                         @endif
                     </div>
                 </div>
