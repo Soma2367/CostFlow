@@ -53,15 +53,16 @@ class SubscriptionService
                     ->where('status', SubscriptionStatus::ACTIVE)
                     ->get(['subscription_name', 'amount']);
 
-        if(!$income) {
-            return null;
-        }
-        if($subscriptions->isEmpty()) {
+        if(!$income || $subscriptions->isEmpty()) {
             return null;
         }
 
         $totalSubsc = $subscriptions->sum('amount');
         $balance = $income->amount - $totalSubsc;
+
+        if($balance <= 0) {
+            return null;
+        }
 
         $remaining_series = [];
         $remaining_labels = [];

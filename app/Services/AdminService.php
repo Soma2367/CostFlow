@@ -52,11 +52,7 @@ class AdminService
                     ->where('status', FixedCostStatus::ACTIVE)
                     ->get(['cost_name', 'amount']);
 
-        if(!$income) {
-            return null;
-        }
-
-        if($subscriptions->isEmpty() && $fixedCosts->isEmpty()) {
+        if(!$income || ($subscriptions->isEmpty() && $fixedCosts->isEmpty())) {
             return null;
         }
 
@@ -65,6 +61,10 @@ class AdminService
         $totalExpense = $subscExpense + $fixedCostExpense;
 
         $balance = $income->amount - $totalExpense;
+
+        if($balance <= 0) {
+            return null;
+        }
 
         if($balance > 0) {
             $series[] = $balance;

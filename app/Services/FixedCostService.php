@@ -55,14 +55,16 @@ class FixedCostService
              ->where('status', FixedCostStatus::ACTIVE)
              ->get(['cost_name', 'amount']);
 
-        if(!$income) {
+        if(!$income || $fixedCost->isEmpty()) {
             return null;
         }
 
-        
-
         $totalFixedCost = $fixedCost->sum('amount');
         $balance = $income->amount - $totalFixedCost;
+
+        if($balance <= 0) {
+            return null;
+        }
 
         $remaining_series = [];
         $remaining_labels = [];
