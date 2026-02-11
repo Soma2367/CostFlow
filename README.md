@@ -3,7 +3,30 @@
 
 ## 概要
 CostFlowは、月々のサブスクリプションや固定費を一元管理し、収入に対する支出の割合を把握できるWebアプリケーションです。
-  
+
+## URL / ER図 / 画面設計図 
+
+### URL
+CostFlow - https://costflow.fly.dev<br>
+画面右上の始めるボタンから新規登録をし、使うことができます。
+
+### ER図
+ER図 - https://drawsql.app/teams/amos-9/diagrams/costflow
+
+### 画面設計図
+画面設計図 - https://www.figma.com/design/zbmLY4QvsA8P0QxcqLFrwu/%E5%9B%BA%E5%AE%9A%E8%B2%BB%E7%AE%A1%E7%90%86%E3%82%A2%E3%83%97%E3%83%AAFW?node-id=0-1&p=f&t=RsFwimZ0HO2T8dSD-0
+### LP
+<img width="2940" height="3248" alt="Image" src="https://github.com/user-attachments/assets/c5fd7a89-490b-490a-8678-e510dbf93922" />
+
+### 管理画面
+<img width="2940" height="1906" alt="Image" src="https://github.com/user-attachments/assets/f8c77aa3-fd14-40ef-b727-4e25f3b3ffcc" />
+
+### サブスク管理画面
+<img width="2940" height="2092" alt="Image" src="https://github.com/user-attachments/assets/af30d6c1-f907-4541-8512-cc29135efbd0" />
+
+### 固定費管理画面
+<img width="2940" height="2092" alt="Image" src="https://github.com/user-attachments/assets/12327a86-37ee-4310-98eb-05a6d8ac3321" />
+
 ## 機能一覧
 
 ### 認証機能
@@ -37,6 +60,10 @@ CostFlowは、月々のサブスクリプションや固定費を一元管理し
 - 有効/一時停止/解約ステータス切り替え
 - **メモ機能**
 
+## テスト
+- **PHPUnit**: 27件のフィーチャーテスト
+- CRUD操作、認証、認可のテスト
+
 ## 技術スタック
 
 ### バックエンド
@@ -60,13 +87,3 @@ CostFlowは、月々のサブスクリプションや固定費を一元管理し
 - **Laravel Breeze**: 認証機能
 - **Blade UI Kit (Heroicons)**: アイコン管理
 - **Laravel Vite Plugin**: Vite統合
-
-## テスト
-- **PHPUnit**: 27件のフィーチャーテスト
-- CRUD操作、認証、認可のテスト
-
-## アーキテクチャ
-- **MVCパターン**: Controller、Model、View
-- **サービス層**: ビジネスロジックの分離 (FixedCostService, SubscriptionService)
-- **Enum**: ステータスとカテゴリの型安全管理
-- **RESTful API設計**: リソースベースのルーティング
